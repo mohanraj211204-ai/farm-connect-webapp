@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buyer Dashboard - FarmConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/buyer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <h1><i class="fas fa-shopping-basket"></i> FarmConnect</h1>
+                <span class="user-role">Buyer Dashboard</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active" onclick="showSection('browse')">
+                    <i class="fas fa-search"></i> Browse Products
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('myOrders')">
+                    <i class="fas fa-shopping-cart"></i> My Orders
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('messages')">
+                    <i class="fas fa-comments"></i> Messages
+                </a>
+                <div class="search-box">
+                    <input type="text" id="globalSearch" placeholder="Search products...">
+                    <button onclick="globalSearch()"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="user-info">
+                    <span id="buyerName">Loading...</span>
+                    <div class="user-dropdown">
+                        <a href="#" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Content -->
+    <div class="container main-content">
+        <!-- Browse Products Section -->
+        <section id="browseSection" class="section active">
+            <div class="section-header">
+                <h2><i class="fas fa-search"></i> Browse Fresh Produce</h2>
+                <p>Find the best quality products directly from farmers</p>
+            </div>
+            
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label><i class="fas fa-filter"></i> Filters</label>
+                    <select id="categoryFilter" onchange="applyFilters()">
+                        <option value="">All Categories</option>
+                        <option value="vegetables">Vegetables</option>
+                        <option value="fruits">Fruits</option>
+                        <option value="grains">Grains</option>
+                        <option value="dairy">Dairy</option>
+                        <option value="poultry">Poultry</option>
+                    </select>
+                    
+                    <select id="locationFilter" onchange="applyFilters()">
+                        <option value="">All Locations</option>
+                        <!-- Will be populated dynamically -->
+                    </select>
+                    
+                    <select id="sortFilter" onchange="applyFilters()">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Highest Rating</option>
+                    </select>
+                </div>
+                
+                <div class="price-range">
+                    <label>Price Range (₹):</label>
+                    <input type="number" id="minPrice" placeholder="Min" onchange="applyFilters()">
+                    <span> - </span>
+                    <input type="number" id="maxPrice" placeholder="Max" onchange="applyFilters()">
+                </div>
+                
+                <button class="btn btn-outline" onclick="resetFilters()">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+            </div>
+            
+            <div class="market-price-banner">
+                <h3><i class="fas fa-chart-line"></i> Today's Market Prices</h3>
+                <div class="price-ticker" id="priceTicker">
+                    <!-- Market prices will scroll here -->
+                    <span>Tomato: ₹32/kg</span>
+                    <span>Potato: ₹18/kg</span>
+                    <span>Onion: ₹28/kg</span>
+                    <span>Rice: ₹45/kg</span>
+                </div>
+            </div>
+            
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+                <div class="loading">Loading products...</div>
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Product Details Modal -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="productModalBody"></div>
+            </div>
+        </div>
+
+        <!-- Order Modal -->
+        <div id="orderModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeOrderModal()">&times;</span>
+                <div id="orderModalBody"></div>
+            </div>
+        </div>
+
+        <!-- My Orders Section -->
+        <section id="myOrdersSection" class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-shopping-cart"></i> My Orders</h2>
+                <div class="order-filters">
+                    <select id="myOrderFilter" onchange="filterMyOrders()">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="orders-container" id="myOrdersContainer">
+                <!-- Orders will be loaded here -->
+                <div class="loading">Loading orders...</div>
+            </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="messagesSection" class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-comments"></i> Messages</h2>
+                <button class="btn btn-primary" onclick="startNewChat()">
+                    <i class="fas fa-plus"></i> New Message
+                </button>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <div class="chat-search">
+                        <input type="text" placeholder="Search conversations..." id="chatSearch">
+                    </div>
+                    <div class="chat-list" id="chatList">
+                        <!-- Chat list will be loaded here -->
+                        <div class="no-chats">No messages yet</div>
+                    </div>
+                </div>
+                
+                <div class="chat-main">
+                    <div class="chat-header" id="chatHeader">
+                        <div class="no-chat-selected">
+                            <i class="fas fa-comments"></i>
+                            <h3>Select a conversation</h3>
+                            <p>Choose a chat from the list or start a new one</p>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be loaded here -->
+                    </div>
+                    
+                    <div class="chat-input" id="chatInput" style="display: none;">
+                        <input type="text" placeholder="Type your message..." id="messageInput">
+                        <button onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profileSection" class="section">
+            <div class="section-header">
+                <h2><i class="fas fa-user"></i> My Profile</h2>
+                <button class="btn btn-primary" onclick="editProfile()">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+            
+            <div class="profile-container">
+                <div class="profile-sidebar">
+                    <div class="profile-avatar">
+                        <img src="https://ui-avatars.com/api/?name=Buyer&background=2c8c3a&color=fff&size=150" 
+                             alt="Profile" id="profileImage">
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <h3>Buying Stats</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Orders</span>
+                            <span class="stat-value" id="buyerTotalOrders">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Money Saved</span>
+                            <span class="stat-value" id="moneySaved">₹0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Farmers Connected</span>
+                            <span class="stat-value" id="farmersConnected">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Buyer Rating</span>
+                            <span class="stat-value" id="buyerRating">0.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-main">
+                    <div class="profile-info">
+                        <h3>Personal Information</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Full Name</label>
+                                <p id="buyerProfileName">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Username</label>
+                                <p id="buyerProfileUsername">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Mobile Number</label>
+                                <p id="buyerProfileMobile">Loading...</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Account Type</label>
+                                <p class="role-badge buyer">Buyer</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Location</label>
+                                <p id="buyerProfileLocation">Not specified</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Member Since</label>
+                                <p id="buyerMemberSince">2023</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-shipping">
+                        <h3>Shipping Address</h3>
+                        <div class="address-card" id="addressCard">
+                            <p>No shipping address saved</p>
+                            <button class="btn btn-small" onclick="editAddress()">Add Address</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/buyer.js"></script>
+</body>
+</html>

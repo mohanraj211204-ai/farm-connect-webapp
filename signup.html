@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - FarmConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join FarmConnect as a Farmer or Buyer</p>
+            </div>
+            
+            <form id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <label for="role">I am a</label>
+                    <select id="role" required>
+                        <option value="">Select Role</option>
+                        <option value="farmer">Farmer 👨‍🌾</option>
+                        <option value="buyer">Buyer 🛒</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required placeholder="Choose a username">
+                    <small>This will be your unique identifier</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mobile">Mobile Number</label>
+                    <div class="mobile-input">
+                        <input type="tel" id="mobile" required placeholder="9876543210">
+                        <button type="button" id="sendOtpBtn" class="btn btn-small">Send OTP</button>
+                    </div>
+                    <small>Indian mobile number (10 digits)</small>
+                </div>
+                
+                <div class="form-group otp-group" style="display: none;">
+                    <label for="otp">Enter OTP</label>
+                    <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                    <small>Check your phone for OTP. Valid for 10 minutes.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required placeholder="Create a password (min 6 chars)">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" required placeholder="Confirm your password">
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location (Optional)</label>
+                    <input type="text" id="location" placeholder="City/District, State">
+                </div>
+                
+                <div class="form-options">
+                    <label class="checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+                
+                <button type="submit" id="signupBtn" class="btn btn-primary btn-block" disabled>
+                    Create Account
+                </button>
+                
+                <div class="auth-divider">
+                    <span>Already have an account?</span>
+                </div>
+                
+                <a href="login.html" class="btn btn-outline btn-block">Login Instead</a>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Free to join. No hidden fees.</p>
+            </div>
+        </div>
+        
+        <div class="auth-side">
+            <div class="auth-side-content">
+                <h2>Why Join FarmConnect?</h2>
+                <div class="benefits">
+                    <div class="benefit">
+                        <span>💰</span>
+                        <div>
+                            <h4>Better Prices</h4>
+                            <p>Get fair market prices without middlemen</p>
+                        </div>
+                    </div>
+                    <div class="benefit">
+                        <span>📱</span>
+                        <div>
+                            <h4>Easy to Use</h4>
+                            <p>Simple interface designed for everyone</p>
+                        </div>
+                    </div>
+                    <div class="benefit">
+                        <span>🔒</span>
+                        <div>
+                            <h4>Secure</h4>
+                            <p>Protected transactions and data privacy</p>
+                        </div>
+                    </div>
+                    <div class="benefit">
+                        <span>🤝</span>
+                        <div>
+                            <h4>Direct Contact</h4>
+                            <p>Chat directly with farmers or buyers</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="role-info" id="roleInfo">
+                    <!-- Dynamic content based on role selection -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
